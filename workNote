@@ -1,0 +1,54 @@
+------dujun:
+
+<--> 2017_08_1 8<-->:
+<db login>
+base_ip = '10.10.69.170'
+base_user = 'reader'
+base_pwd = 'miaoji1109'
+base_db = 'base_data'
+
+[spider@newverify01-uc-spider ~]$ /search/spider_log/logs/rotation/ 
+[spider@newverify01-uc-spider ~]$ /search/spider_log/rotation/20170
+[spider@newverify01-uc-spider ~]$ /home/workspace/spider/SpiderClient/logs/r
+newverify01-uc-spider
+grep -r '爬虫结束'|grep 'traveloc'|grep 'code: 37'
+任务流日志 grep {线程名} 2017080416/slave.log_8090.2017080416.newverify01-uc-spider.err 
+
+
+
+SELECT sid,COUNT(sid) AS s_count FROM `hotel_unid` WHERE source='ctrip' GROUP BY sid HAVING s_count>1
+
+pip install --index https://pypi.mirrors.ustc.edu.cn/simple/ lxml
+
+google api:
+http://maps.google.cn/maps/api/geocode/json?latlng=37.6032948840667,-122.376498430967
+量大应该需要代理，可以用这个服务获取代理
+http://10.10.239.46:8087/proxy?user=crawler&passwd=spidermiaoji2014&source=google
+
+#db_md5
+mycli -h 10.10.231.105 -uhourong -phourong crawled_html
+
+#DB连接池
+import pymysql
+from DBUtils.PooledDB import PooledDB
+mysql_db_pool = PooledDB(creator=pymysql, mincached=1, maxcached=2, maxconnections=maxconnections,
+        host=host, port=3306, user=user, passwd=passwd,
+        db=db, charset='utf8', use_unicode=False, blocking=True)
+
+#password
+reader
+miaoji1109
+
+redmine 
+a:姓名全拼
+p:miaoji123
+
+#中控机
+10.10.129.187    dujun.uc.off
+fengyufei
+fengyufei123
+
+http://bt.mioji.com/test/  这个是测试环境咱们产品的地址
+fengyufei
+fengyufei123  /   Mioji123
+
