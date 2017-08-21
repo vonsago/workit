@@ -19,10 +19,9 @@ password = 'MiojiPikaOrz'
 port=9221
 
 #db_ip..
-base_ip = "10.10.69.170"
-base_user = "reader"
-base_pwd = "miaoji1109"
-base_db = "base_data"
+‘’‘
+db psw
+’‘’
 
 result_flag=0
 
