@@ -26,10 +26,9 @@ import pymysql
 from DBUtils.PooledDB import PooledDB
 
 # db ip
-base_ip = '10.10.69.170'
-base_user = 'reader'
-base_pwd = 'miaoji1109'
-base_db = 'base_data'
+'''
+db psw
+'''
 
 mysql_db_pool = PooledDB(creator=pymysql, mincached=1, maxcached=2, maxconnections=100, host=base_ip, port=3306,
                          user=base_user, passwd=base_pwd, db=base_db, charset='utf8', use_unicode=False, blocking=True)
