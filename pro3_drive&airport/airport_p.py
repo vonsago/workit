@@ -70,6 +70,10 @@ def get_dist_by_map(map_1, map_2):
         return 100000000000
 #distence end
 
+def change_map(map1):
+    m1 = map1.split(',')
+    return m1[1]+','+m1[0]
+
 
 def get_city(cid):
     print cid
@@ -97,7 +101,7 @@ def process_task():
         f_csv = csv.reader(csvf)
         h = next(f_csv)
         for row in f_csv:
-            dist = get_dist_by_map(row[2],row[6])
+            dist = get_dist_by_map(change_map(row[2]),change_map(row(6)))
             datas = get_city(row[0])
             dict_writer.writerow({"cid":row[0], "mid":row[1],"name":datas[0],"name_en":datas[1],"tri_code":datas[2], "city_map_info":row[2], "机场id":row[3], "机场名字":row[4], "英文名":row[5], "机场坐标":row[6], "belong_city_id":row[7],"距离":dist}) 
 
