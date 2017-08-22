@@ -14,12 +14,12 @@ import re
 import math
 import pymysql
 from DBUtils.PooledDB import PooledDB
-
+import multiprocessing
+import time
 # db ip
 '''
-psw
+db psw
 '''
-
 mysql_db_pool = PooledDB(creator=pymysql, mincached=1, maxcached=2, maxconnections=100, host=base_ip, port=3306,
                          user=base_user, passwd=base_pwd, db=base_db, charset='utf8', use_unicode=False, blocking=True)
 
@@ -86,7 +86,6 @@ def get_target_city(c_datas):
     for c in c_datas:
         if air_list.count(c[0])==0:
             target_city.append(c)
-    print target_city
     return target_city
 
 def get_city():
@@ -228,32 +227,47 @@ def process_airport_list(city,airport_list):
     result[city]= pre[index]
     return result
 
-
-def process_city():
-    target_city = get_target_city(get_city())
-    print len(target_city)
+def return_file(data):
+    try:
+        dict_writer.writerow({"cid":data[0], "mid":data[1], "city_map_info":data[2], "机场id":data[3], "机场名字":data[4], "英文名":data[5], "机场坐标":data[6], "belong_city_id":data[7]})
+    except:
+        err = 'error'
+        dict_writer.writerow({"cid":data[0], "mid":data[1], "city_map_info":data[2], "机场id":err})
+def process_city(city):
     #('60143', '-75.725555,-14.068056', '711')
     #(172, 'name1', 'Eu2', '10068', '7.529118,47.598736', '\xe7\x91\x9e\xe5\xa3\xab', 1, 'Open')
-    for city in target_city:
-        cid = city[0]
-        cmap_info =city[1]
-        mid = city[2]
-        airport_list = process_airport(mid,cid)
-        result = process_airport_list(city,airport_list)
-        data = result[city]
-        try:
-            dict_writer.writerow({"cid":cid, "mid":mid, "city_map_info":cmap_info, "机场id":data[0], "机场名字":data[1], "英文名":data[2], "机场坐标":data[4], "belong_city_id":data[3]}) 
-        except:
-            err = 'error'
-            dict_writer.writerow({"cid":cid, "mid":mid, "city_map_info":cmap_info, "机场id":err, "机场名字":err, "英文名":err, "机场坐标":err, "belong_city_id":err}) 
+    cid = city[0]
+    cmap_info =city[1]
+    mid = city[2]
+    airport_list = process_airport(mid,cid)
+    result = process_airport_list(city,airport_list)
+    data = result[city]
+    retu = []
+    retu.append(city[0])
+    retu.append(city[2])
+    retu.append(city[1])
+    if data != None:
+        retu.append(data[0])
+        retu.append(data[1])
+        retu.append(data[2])
+        retu.append(data[4])
+        retu.append(data[3])
+    return retu
 
 
 if __name__ == '__main__':
+    st = time.time()
     csvFile = open("airport.csv", "w")
     fileheader = ["cid", "mid", "city_map_info", "机场id", "机场名字", "英文名", "机场坐标", "belong_city_id"]
     dict_writer = csv.DictWriter(csvFile, fileheader)
     dict_writer.writerow(dict(zip(fileheader, fileheader)))
     #dict_writer.writerow() 
 
-    process_city() 
+    pool = multiprocessing.Pool(processes = 50)
+    target_city = get_target_city(get_city())
+    for city in target_city:
+        pool.apply_async(process_city, (city, ),callback=return_file)
+    pool.close()
+    pool.join() 
+    print time.time()-st
 
