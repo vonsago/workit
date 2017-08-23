@@ -12,17 +12,14 @@ sys.path.append('../protoc_lib')
 from match_key import Match_Key
 from libBoostFlightTicketInfo import Flight_Ticket_Info
 sys.setdefaultencoding('utf8')
-#ip and password
-iflight_redis_ip="10.19.51.101"
-md5_redis_ip="10.10.240.17"
-password = 'MiojiPikaOrz'
-port=9221
+'''
+psw msg
+'''
 
 #db_ip..
-base_ip = "10.10.69.170"
-base_user = "reader"
-base_pwd = "miaoji1109"
-base_db = "base_data"
+'''
+db msg
+'''
 
 result_flag=0
 
