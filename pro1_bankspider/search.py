@@ -16,16 +16,13 @@ from match_key import Match_Key
 from libBoostFlightTicketInfo import Flight_Ticket_Info
 
 #ip and password
-iflight_redis_ip="10.19.51.101"
-md5_redis_ip="10.10.240.17"
-password = 'MiojiPikaOrz'
-port=9221
-
+'''
+psw mag
+'''
 #db_ip..
-base_ip = "10.10.69.170"
-base_user = "reader"
-base_pwd = "miaoji1109"
-base_db = "base_data"
+'''
+db msg
+'''
 
 #命令行输入要查找的数据
 
@@ -138,23 +135,4 @@ if __name__ == '__main__':
 
 	get_result()
 	print result
-'''
- 32 LO ZY
- 33 DL ZY
- 34 OS ZY
- 35 BA ZY
- 36 SU ZY
- 37 SU ZY
- 38 SU ZY
- 39 LX ZY
- 40 KL ZY
- 41 SU ZY
- 42 CX ZY
- 43 CA ZY
- 44 LO ZY
- 45 KL ZY
- 46 CX ZY
- 47 SU ZY
 
- 78f8ee36eb5ed808
- '''
