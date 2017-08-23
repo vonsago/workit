@@ -18,10 +18,9 @@ sys.setdefaultencoding('utf-8')
 DATE_F = '%Y-%m-%d'
 # db ip
 #db=MySQLdb.connect(host = base_ip,user = base_user,charset = 'utf8',passwd = base_pwd,db = base_db)
-base_ip = '10.10.230.206'
-base_user = 'demo'
-base_pwd = 'demo123'
-base_db = 'demo'
+'''
+db msg
+'''
 
 def cbankspider():
     try:
@@ -32,7 +31,7 @@ def cbankspider():
     fla = 0
     all_current_list = []
 
-    URL = 'http://www.boc.cn/sourcedb/whpj/index.html'
+    URL = 'url'
 
     for index in range(10):
         if(index>0):
