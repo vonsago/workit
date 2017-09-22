@@ -56,6 +56,33 @@ def encode_text(str):
     return liss
 
 
+def request_suggestion(url):
+    r = requests.get(url)
+    suggestion = json.loads(r.content)
+    return suggestion
+
+def get_suggestions_elong(url):
+    city_list = get_datas_from_file('booking_city_list.csv')
+    all_ids =[]
+
+    def task(city):
+        ul = url.format(city[-2])
+        suggestion = request_suggestion(ul)['data']
+        index = -1
+        print '--process-->',city[-2]
+        if suggestion != None and suggestion.has_key('city'):
+            for sug in suggestion['city']:
+                if all_ids.count(sug['id'])== 0:
+                    all_ids.append(sug['id'])
+                    data = [sug['name_cn'],sug['name_en'],sug["region_info"]['country_name_cn'],sug]
+                    process_data(data)
+    
+    gs = []
+    for city in city_list:                             
+        g = execute_pool.apply_async(task, args=(city,))
+        gs.append(g)
+    gevent.joinall(gs)
+
 def get_datas_from_file(fname):
     def get_data_from_csv(fname):
         with open(fname) as f:
