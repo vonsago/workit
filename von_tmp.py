@@ -47,6 +47,14 @@ def insert_db(data):
 
     db.close()
 
+def encode_unicode(str):
+    return str.replace('\u00', '\\x').decode('string-escape').encode('utf8')
+
+def encode_text(str):
+    lis = re.split('[ \n\t ]',str)
+    liss = filter(lambda x: x!='', lis)
+    return liss
+
 
 def get_datas_from_file(fname):
     def get_data_from_csv(fname):
@@ -73,19 +81,10 @@ def get_datas_from_file(fname):
             return get_data_from_forml(fname)
 
 
-def process_data(mdata,flag):
-    db=mysql_db_reader.connection()
-    cursor = db.cursor()
-    cursor.execute('select id ,name_en,tri_code,region,map_info from city where name ="{}"'.format(mdata[0]))
-    try:
-        data = cursor.fetchall()[0]
-
-        if flag:
-            dict_writer.writerow({"name":mdata[0],"id":data[0],"name_en":data[1],"tri_code":data[2],"region":data[3],"map_info":data[4] ,"country":mdata[1],"是否匹配":'YES'})
-        else:
-            dict_writer.writerow({"name":mdata[0],"id":data[0],"name_en":data[1],"tri_code":data[2],"region":data[3],"map_info":data[4] ,"country":mdata[1],"是否匹配":'NO'})
-    except :
-        dict_writer.writerow({"name":mdata[0],"id":'None',"country":mdata[1],"是否匹配":'NO'})
+def process_data(mdata):
+    def process_data(mdata):
+    dict_writer.writerow({"name":mdata[0],'name_en':mdata[1],'country':mdata[2],'suggestion':mdata[3]})
+    print '-over--->',mdata[0]
 
 if __name__ == '__main__':
     '''
