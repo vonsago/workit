@@ -30,6 +30,34 @@ mysql_db_admin = PooledDB(creator=pymysql, mincached=1, maxcached=2, maxconnecti
 mysql_db_reader = PooledDB(creator=pymysql, mincached=1, maxcached=2, maxconnections=100, host=base_ip1, port=3306,                                                                                                                                
                         user=base_user1, passwd=base_pwd1, db=base_db1, charset='utf8', use_unicode=False, blocking=True)
 
+def get_datas_from_file(fname):
+    def get_data_from_csv(fname):
+        with open(fname) as f:
+            final= []
+            f_csv = csv.reader(f)
+            headers = next(f_csv)
+            print headers
+            for row in f_csv:
+                final.append(row)
+            return final
+    def get_data_from_forml(fname):
+        with open(fname) as f:
+            final = []
+            datas = f.readlines()
+            for data in datas:
+                final.append(data.replace('\n',''))
+            return final
+
+    if fname.find('.')>0:
+        if fname.split('.')[-1]=='csv':
+            return get_data_from_csv(fname)
+        else:
+            return get_data_from_forml(fname)
+
+def process_data(mdata):
+    def process_data(mdata):
+    dict_writer.writerow({"name":mdata[0],'name_en':mdata[1],'country':mdata[2],'suggestion':mdata[3]})
+    print '-over--->',mdata[0]
 
 def insert_db(data):
     db = mysql_db_admin.connection()
@@ -56,6 +84,8 @@ def encode_text(str):
     liss = filter(lambda x: x!='', lis)
     return liss
 
+def my_re(string):
+    china_li = re.findall('[\x80-\xff]+',string)
 
 def request_suggestion(url, headers = None):
     i = 1
@@ -67,8 +97,6 @@ def request_suggestion(url, headers = None):
         except Exception as e:
             print e,'get-error'
             i += 1
-
-
 
 def get_suggestions_elong(url):
     city_list = get_datas_from_file('booking_city_list.csv')
@@ -91,36 +119,6 @@ def get_suggestions_elong(url):
         g = execute_pool.apply_async(task, args=(city,))
         gs.append(g)
     gevent.joinall(gs)
-
-def get_datas_from_file(fname):
-    def get_data_from_csv(fname):
-        with open(fname) as f:
-            final= []
-            f_csv = csv.reader(f)
-            headers = next(f_csv)
-            print headers
-            for row in f_csv:
-                final.append(row)
-            return final
-    def get_data_from_forml(fname):
-        with open(fname) as f:
-            final = []
-            datas = f.readlines()
-            for data in datas:
-                final.append(data.replace('\n',''))
-            return final
-
-    if fname.find('.')>0:
-        if fname.split('.')[-1]=='csv':
-            return get_data_from_csv(fname)
-        else:
-            return get_data_from_forml(fname)
-
-
-def process_data(mdata):
-    def process_data(mdata):
-    dict_writer.writerow({"name":mdata[0],'name_en':mdata[1],'country':mdata[2],'suggestion':mdata[3]})
-    print '-over--->',mdata[0]
 
 def process(args):
     '''
