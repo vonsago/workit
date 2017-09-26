@@ -2,8 +2,9 @@
 # -*- coding: UTF-8 -*-
 
 '''
-date : 2017-08-18
-@author: vassago
+@date : 2017-08-18
+@author : vassago
+@update : 2017-09-26
 '''
 
 import sys
