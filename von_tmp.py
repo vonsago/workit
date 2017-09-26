@@ -127,13 +127,6 @@ def process(args):
     return result
 
 if __name__ == '__main__':
-    pool = multiprocessing.Pool(processes = 100)
-    for t in tasks:
-        pool.apply_async(process, (t, ),callback=write_file)
-    pool.close()
-    pool.join()
-
-if __name__ == '__main__':
     '''
     csvFile = open("test.csv", "w")
     fileheader = ["name","country","id","name_en" ]
@@ -142,6 +135,13 @@ if __name__ == '__main__':
     match_city_with_db('hilton_city_list0.csv')
     '''
 
+    pool = multiprocessing.Pool(processes = 100)
+    for t in tasks:
+        pool.apply_async(process, (t, ),callback=write_file)
+    pool.close()
+    pool.join()
+
+    
 
     
 
