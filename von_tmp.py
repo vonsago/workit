@@ -152,6 +152,7 @@ def request_suggestion(url, headers = None):
         except Exception as e:
             print e,'get-error'
             i += 1
+    return None
 
 def get_suggestions_elong(url):
     city_list = get_datas_from_file('booking_city_list.csv')
