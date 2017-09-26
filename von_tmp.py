@@ -57,10 +57,18 @@ def encode_text(str):
     return liss
 
 
-def request_suggestion(url):
-    r = requests.get(url)
-    suggestion = json.loads(r.content)
-    return suggestion
+def request_suggestion(url, headers = None):
+    i = 1
+    while i < 5:
+        try:
+            r = requests.get(url,headers = headers,proxies = get_PROXY())
+            suggestion = json.loads(r.content)
+            return suggestion
+        except Exception as e:
+            print e,'get-error'
+            i += 1
+
+
 
 def get_suggestions_elong(url):
     city_list = get_datas_from_file('booking_city_list.csv')
