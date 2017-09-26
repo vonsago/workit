@@ -30,6 +30,46 @@ mysql_db_admin = PooledDB(creator=pymysql, mincached=1, maxcached=2, maxconnecti
 mysql_db_reader = PooledDB(creator=pymysql, mincached=1, maxcached=2, maxconnections=100, host=base_ip1, port=3306,                                                                                                                                
                         user=base_user1, passwd=base_pwd1, db=base_db1, charset='utf8', use_unicode=False, blocking=True)
 
+# distance
+EARTH_RADIUS = 6378137
+PI = 3.1415927
+
+def rad(d):
+    return d * PI / 180.0
+
+def getDist(lng1, lat1, lng2, lat2):
+    radLat1 = rad(lat1)
+    radLat2 = rad(lat2)
+    a = radLat1 - radLat2
+    b = rad(lng1) - rad(lng2)
+
+    s = 2 * math.asin(
+        math.sqrt(math.pow(math.sin(a / 2), 2) + math.cos(radLat1) * math.cos(radLat2) * math.pow(math.sin(b / 2), 2)))
+
+    s = s * EARTH_RADIUS
+    s = round(s * 10000) / 10000
+
+    return int(s)
+
+def getDistSimply(lng1, lat1, lng2, lat2):
+    dx = lng1 - lng2
+    dy = lat1 - lat2
+    b = (lat1 + lat2) / 2.0
+    lx = rad(dx) * EARTH_RADIUS * math.cos(rad(b))
+    ly = EARTH_RADIUS * rad(dy)
+    return int(math.sqrt(lx * lx + ly * ly))/1000
+
+def get_dist_by_map(map_1, map_2):
+    try:
+        return getDistSimply(float(map_1.split(',')[0]), float(map_1.split(',')[1]),
+                             float(map_2.split(',')[0]), float(map_2.split(',')[1]))
+
+    except Exception, e:
+        print ('get_dist', ['map = ' + map_1 + '\t' + map_2])
+        print map_2
+        return 100000000000
+#distence end
+
 def get_datas_from_file(fname):
     def get_data_from_csv(fname):
         with open(fname) as f:
@@ -140,11 +180,3 @@ if __name__ == '__main__':
         pool.apply_async(process, (t, ),callback=write_file)
     pool.close()
     pool.join()
-
-    
-
-    
-
-
-
-
