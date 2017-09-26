@@ -57,7 +57,7 @@ def getDistSimply(lng1, lat1, lng2, lat2):
     b = (lat1 + lat2) / 2.0
     lx = rad(dx) * EARTH_RADIUS * math.cos(rad(b))
     ly = EARTH_RADIUS * rad(dy)
-    return int(math.sqrt(lx * lx + ly * ly))/1000
+    return int(math.sqrt(lx * lx + ly * ly))/1000   # --- m
 
 def get_dist_by_map(map_1, map_2):
     try:
@@ -69,6 +69,21 @@ def get_dist_by_map(map_1, map_2):
         print map_2
         return 100000000000
 #distence end
+
+def get_PROXY():
+    R = requests.get('url')
+    p = R.content
+    if p.split('.')[0] == '10':
+        PROXY = {
+            'http': 'socks5://' + p,
+            'https': 'socks5://' + p
+        }
+    else:
+        PROXY = {
+            'http': 'http://' + p,
+            'https': 'https://' + p
+        }
+    return PROXY
 
 def get_datas_from_file(fname):
     def get_data_from_csv(fname):
