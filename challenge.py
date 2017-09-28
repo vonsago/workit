@@ -78,6 +78,12 @@ def process_num_9():
     im.show()
 
 def process_num_10():
+    a = ['1',]
+    for i in range(30):
+        pass
+
+
+
     a=['11',]
     for i in range(30):
         node = ''
@@ -108,18 +114,10 @@ def process_num_11():
     im1.show()
 
 def process_num_12():
-    from PIL import Image, ImageDraw
-    import StringIO
-    f = open('evil2.gfx')
-    im = open('evil.png','wb')
-    datas = f.readlines()
-    print datas[:60:5]
-    print len(datas)
-    print '---<s>---'
-    for data in datas:
-        im.write(data[:-1])
-        
-    #for data in datas:
+    doc2 = open("/Users/mioji/Desktop/evil2.gfx", "rb").read()
+    for i in range(5):
+        with open('evil%s'%(str(i)),'wb') as f:
+            f.write(doc2[i::5])
         
 
 if __name__ == '__main__':
