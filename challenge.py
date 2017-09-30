@@ -18,6 +18,8 @@ from gevent import pool
 import requests
 import time
 import re
+import array
+from pylab import *
 
 execute_pool = pool.Pool(2000)
 
@@ -78,12 +80,6 @@ def process_num_9():
     im.show()
 
 def process_num_10():
-    a = ['1',]
-    for i in range(30):
-        pass
-
-
-
     a=['11',]
     for i in range(30):
         node = ''
@@ -118,7 +114,19 @@ def process_num_12():
     for i in range(5):
         with open('evil%s'%(str(i)),'wb') as f:
             f.write(doc2[i::5])
-        
+
+def process_num_13():
+    import xmlrpclib
+
+def process_num_14():
+    from PIL import Image, ImageDraw
+    im = array(Image.open('/Users/mioji/Desktop/wire.png'))
+    im1 = Image.new("RGB", (100, 100))
+    for i in range(50):
+
+
+
+
 
 if __name__ == '__main__':
-    process_num_12()
+    process_num_14()
