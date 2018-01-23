@@ -110,10 +110,16 @@ def get_datas_from_file(fname):
         else:
             return get_data_from_forml(fname)
 
-def process_data_to_csv(mdata):
-    def process_data(mdata):
-    dict_writer.writerow({"name":mdata[0],'name_en':mdata[1],'country':mdata[2],'suggestion':mdata[3]})
-    print '-over--->',mdata[0]
+def process_datas_to_csv(datas,file_name,header):
+    csvFile = open("{}.csv".format(file_name), "w")
+    fileheader = header
+    dict_writer = csv.DictWriter(csvFile, fileheader)
+    dict_writer.writerow(dict(zip(fileheader, fileheader)))
+
+    for data in datas:
+        dict_writer.writerow(dic(zip(header,data)))
+    #csvFile.close()
+    print '-over--->',data[0]
 
 def insert_db(data):
     db = mysql_db_admin.connection()
