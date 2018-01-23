@@ -21,14 +21,14 @@ import json
 import requests
 import multiprocessing
 '''
-#db 
+#db
 psw
 '''
 
 mysql_db_admin = PooledDB(creator=pymysql, mincached=1, maxcached=2, maxconnections=100, host=base_ip, port=3306,
                          user=base_user, passwd=base_pwd, db=base_db, charset='utf8', use_unicode=False, blocking=True)
 
-mysql_db_reader = PooledDB(creator=pymysql, mincached=1, maxcached=2, maxconnections=100, host=base_ip1, port=3306,                                                                                                                                
+mysql_db_reader = PooledDB(creator=pymysql, mincached=1, maxcached=2, maxconnections=100, host=base_ip1, port=3306,
                         user=base_user1, passwd=base_pwd1, db=base_db1, charset='utf8', use_unicode=False, blocking=True)
 
 # distance
@@ -170,9 +170,9 @@ def get_suggestions_elong(url):
                     all_ids.append(sug['id'])
                     data = [sug['name_cn'],sug['name_en'],sug["region_info"]['country_name_cn'],sug]
                     process_data(data)
-    
+
     gs = []
-    for city in city_list:                             
+    for city in city_list:
         g = execute_pool.apply_async(task, args=(city,))
         gs.append(g)
     gevent.joinall(gs)
@@ -182,6 +182,31 @@ def process(args):
     work
     '''
     return result
+
+def test_qyer_result(data):
+    sight, food, shopping, activity = {}, {}, {}, {}
+    for da in data:
+        if da[-2] =='sight':
+            sight[da[1]]=da
+        if da[-2] =='food':
+            food[da[1]]=da
+        if da[-2] =='shopping':
+            shopping[da[1]]=da
+        if da[-2] =='activity':
+            activity[da[1]]=da
+    a,b,c,d = len(sight.keys()),len(food.keys()),len(shopping.keys()),len(activity.keys())
+    print '---',len(sight.keys()),'---',len(food.keys()),'---',len(shopping.keys()),'---',len(activity.keys()),'--total--',a+b+c+d
+
+def get_data_from_mongodb(host = None, port = 27017):
+    client = pymongo.MongoClient(host)
+    collections = client['data_result']['qyer_list']
+    datas = "48c9a9555f94acfb1a179d159a9a8af5|5710ef67b48a169c0d21697cbb3ea67b|a8c57267c0a36e4f24e79c846b08a2e0|4aa3e3fc6ea92a0f4f653dfbc51647fe|daa754f730e09a643b4cde57fe0616e0"
+    for data in datas.split('|'):
+        print data
+        for res in collections.find({"task_id":data}).sort([('used_times', 1)]):
+            print res['total_num'],res['used_times']
+            if res != None:
+                test_qyer_result(res['result'])
 
 if __name__ == '__main__':
     '''
