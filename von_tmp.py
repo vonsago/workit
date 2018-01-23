@@ -110,7 +110,7 @@ def get_datas_from_file(fname):
         else:
             return get_data_from_forml(fname)
 
-def process_data(mdata):
+def process_data_to_csv(mdata):
     def process_data(mdata):
     dict_writer.writerow({"name":mdata[0],'name_en':mdata[1],'country':mdata[2],'suggestion':mdata[3]})
     print '-over--->',mdata[0]
