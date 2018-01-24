@@ -217,6 +217,8 @@ def get_data_from_mongodb(host = None, port = 27017):
 if __name__ == '__main__':
     '''
     csvFile = open("test.csv", "w")
+    import codecs
+    csvFile.write(codecs.BOM_UTF8)
     fileheader = ["name","country","id","name_en" ]
     dict_writer = csv.DictWriter(csvFile, fileheader)
     dict_writer.writerow(dict(zip(fileheader, fileheader)))
