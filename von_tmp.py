@@ -214,6 +214,50 @@ def test_qyer_from_mongodb(host = None, port = 27017):
             if res != None:
                 test_qyer_result(res['result'])
 
+
+def get_data_from_mongodb(host = None, port = 27017):
+    client = pymongo.MongoClient(host)
+    collections = client['SuggestName']['CtripCitySuggestion']
+    sql = """INSERT INTO ota_location(
+    source,sid_md5,sid,suggest_type, suggest, city_id, country_id, s_city, s_region, s_country, s_extra,label_batch
+    )
+    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+    se = set()
+    for data in collections.find():
+        datas = json.loads(data['suggest'])['Data']
+        if datas == None:
+            continue
+        for d in datas:
+            db_data = parse_data_to_db(d)
+            md5 = db_data[1]
+            l = len(se)
+            se.add(md5)
+
+            if l< len(se):
+                insert_db(db_data,sql)
+    print len(se)
+
+def parse_data_to_db(d):
+
+    md5 = calc_md5(d['Poid'])
+    s_city = d['Name']
+    countrys = d['ParentName'].split(',')
+    s_country = countrys[-1]
+    s_region = countrys[0]
+    if s_region == s_country :
+        s_region ="NULL"
+    s_extra = "NULL"
+    country_id = 'NULL'
+    city_id = 'NULL'
+    return ['ctrip_grouptravel',md5,d['Poid'], 2, json.dumps(d), city_id, country_id, s_city, s_region,s_country, s_extra, '2018-01-25a']
+
+def calc_md5(before = None):
+    m = hashlib.md5()
+    m.update(str(before))
+    return m.hexdigest()
+
+
+
 if __name__ == '__main__':
     '''
     csvFile = open("test.csv", "w")
