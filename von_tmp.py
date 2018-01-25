@@ -129,7 +129,7 @@ def insert_db(data):
     )
     VALUES (%s,%s,%s,%s,%s)"""
     try:
-        cur.execute(sql,(data[0],data[1],data[2],data[3]))
+        cur.execute(sql,(data))
         print '--OK--'
         db.commit()
     except Exception as e:
@@ -203,7 +203,7 @@ def test_qyer_result(data):
     a,b,c,d = len(sight.keys()),len(food.keys()),len(shopping.keys()),len(activity.keys())
     print '---',len(sight.keys()),'---',len(food.keys()),'---',len(shopping.keys()),'---',len(activity.keys()),'--total--',a+b+c+d
 
-def get_data_from_mongodb(host = None, port = 27017):
+def test_qyer_from_mongodb(host = None, port = 27017):
     client = pymongo.MongoClient(host)
     collections = client['data_result']['qyer_list']
     datas = "48c9a9555f94acfb1a179d159a9a8af5|5710ef67b48a169c0d21697cbb3ea67b|a8c57267c0a36e4f24e79c846b08a2e0|4aa3e3fc6ea92a0f4f653dfbc51647fe|daa754f730e09a643b4cde57fe0616e0"
