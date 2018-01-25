@@ -274,3 +274,19 @@ if __name__ == '__main__':
         pool.apply_async(process, (t, ),callback=write_file)
     pool.close()
     pool.join()
+
+
+    #-----
+    citys = get_data_from_db('SELECT id,name FROM city')
+    print len(citys)
+    citydic = {}
+    for city in citys:
+        citydic[city[-1]]=city[0]
+    countrys = get_data_from_db('SELECT mid,name,name_en FROM country')
+
+    print len(countrys)
+    countrydic = {}
+    for country in countrys:
+        countrydic[country[1]]=country[0]
+        countrydic[country[2]]=country[0]
+    #-----
