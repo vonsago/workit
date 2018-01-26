@@ -71,6 +71,27 @@ def get_dist_by_map(map_1, map_2):
         return 100000000000
 #distence end
 
+
+Google_URL ='http://maps.google.cn/maps/api/geocode/json?address={}'
+final = {}
+def re_request(url,j):
+    print '-----proces---- ',url
+    i =0
+    while i <5:
+        try:
+            r = requests.get(url, proxies=get_PROXY(), timeout=(5, 10))
+            api_data = r.content
+            #if json.loads(api_data)['status']!='OK':
+            #raise 'not ok'
+            final[j] = json.loads(api_data)['results'][0]['geometry']['location']
+            print 'OK'
+            return
+        except Exception as e:
+            print e,'--and retry---'
+            i+=1
+            if i == 5:
+                print url,'-----fuck--'
+
 def get_PROXY():
     R = requests.get('url')
     p = R.content
