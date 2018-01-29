@@ -90,7 +90,7 @@ def re_request(url,j):
             print e,'--and retry---'
             i+=1
             if i == 5:
-                print url,'-----fuck--'
+                print url,'----fu--'
 
 def get_PROXY():
     R = requests.get('url')
