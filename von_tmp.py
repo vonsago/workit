@@ -226,7 +226,7 @@ def test_qyer_result(data):
 
 def test_qyer_from_mongodb(host = None, port = 27017):
     client = pymongo.MongoClient(host)
-    collections = client['data_result']['qyer_list']
+    collections = client['data_result']['qyer_list_bak']
     datas = "48c9a9555f94acfb1a179d159a9a8af5|5710ef67b48a169c0d21697cbb3ea67b|a8c57267c0a36e4f24e79c846b08a2e0|4aa3e3fc6ea92a0f4f653dfbc51647fe|daa754f730e09a643b4cde57fe0616e0"
     for data in datas.split('|'):
         print data
