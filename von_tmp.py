@@ -336,6 +336,33 @@ def mmp():
                     priority=3, task_type=TaskType.NORMAL) as it:
         for a in all:
             it.insert_task(a)
+
+def match_ctripPoi_city():
+    import pymongo
+    import json
+
+    client = pymongo.MongoClient('mongodb://root:miaoji1109-=@10.19.2.103:27017/')
+    collections = client['SuggestName']['CtripPoiSDK_detail']
+
+    d = MiojiSimilarCityDict()
+
+    for co in collections.find({}):
+        try:
+            mapdic = json.loads(co['map_info'])
+            map = str(mapdic['lng'])+','+str(mapdic['lat'])
+            city_id = d.get_mioji_city_id((co['dest_name'],co['name']), map)[0].cid
+            client.SuggestName.CtripPoiSDK_Mioji.save({
+                'city_id':city_id,
+                'name':co['name'],
+                'dest_name':co['dest_name'],
+                'task':co['keyword'],
+                'map_info':co['map_info']
+            })
+        except Exception as e:
+            print(e)
+            print(co['name'])
+            pass
+
             
 if __name__ == '__main__':
     '''
