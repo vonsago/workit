@@ -312,7 +312,31 @@ def ctripPoi_detail2mysql():
             insert_db(data,sql)
     print num
 
-
+def mmp():
+    import pymongo
+    import pymongo.errors
+    client = pymongo.MongoClient('mongodb://root:miaoji1109-=@10.19.2.103:27017/')
+    db = client['SuggestName']
+    all = []
+    for ce in db.CtripPoiSDK.find({}):
+        try:
+            s = ce['suggest']['List']
+        except:
+            continue
+        for sug in ce['suggest']['List']:
+            args = {
+                'name': sug['Name'],
+                'dest_name': sug['DestName'],
+                'keyword': sug['Url'].split('.')[0].split('/')[-1]
+            }
+            all.append(args)
+    print(len(all))
+    with InsertTask(worker='proj.total_tasks.normal_city_task', queue='supplement_field', routine_key='supplement_field',
+                    task_name='Poictrip_city_20180227a', source='ctrippoidetail', _type='CityInfo',
+                    priority=3, task_type=TaskType.NORMAL) as it:
+        for a in all:
+            it.insert_task(a)
+            
 if __name__ == '__main__':
     '''
     csvFile = open("test.csv", "w")
