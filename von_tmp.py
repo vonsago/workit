@@ -362,6 +362,44 @@ def match_ctripPoi_city():
             print(e)
             print(co['name'])
             pass
+def report_country():
+    countryss = get_data_from_db('SELECT name FROM country')
+    countrys = []
+    for coun in countryss:
+        countrys.append(coun[0])
+
+    client = pymongo.MongoClient('mongodb://root:miaoji1109-=@10.19.2.103:27017/')
+
+
+    csvFile = open("ctripPoi_country.csv", "w")
+    fileheader = ['country','city_num','mioji']
+    dict_writer = csv.DictWriter(csvFile, fileheader)
+    dict_writer.writerow(dict(zip(fileheader, fileheader)))
+
+    from collections import defaultdict
+    coun_city = defaultdict(set)
+    collections = client.SuggestName.CtripPoiSDK_detail
+    for co in collections.find({}):
+        if co['map_info'] == '':
+            continue
+        coun = co['dest'].split('|')[0]
+        if coun == '':
+            continue
+        coun_city[coun].add(co['name'])
+    count = set()
+    for cc in coun_city.items():
+        city = len(cc[1])
+        if cc[0].encode('utf-8') in countrys:
+            count.add(cc[0].encode('utf-8'))
+            dict_writer.writerow(dict(zip(fileheader, [cc[0], city,'yes'])))
+        else:
+            dict_writer.writerow(dict(zip(fileheader, [cc[0], city,'no'])))
+
+    print len(countrys)
+    count = list(count)
+    for cc in countrys:
+        if cc not in count:
+            dict_writer.writerow(dict(zip(fileheader, [cc, 0,'yes'])))
 
             
 if __name__ == '__main__':
