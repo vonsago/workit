@@ -400,7 +400,20 @@ def report_country():
     for cc in countrys:
         if cc not in count:
             dict_writer.writerow(dict(zip(fileheader, [cc, 0,'yes'])))
+def ctripPoiCountry():
+    ##
+    s = ['南极']
 
+    dest_name = '南极洲'
+    ##
+    collections = db['CtripPoiSDK_detail']
+    for i in s:
+        co = collections.find_one({'name':i,'dest_name':dest_name})
+        print i,'-----',co['keyword']
+        db.CtripPoiSDK_country.save({
+            'name':i,
+            'detail':co}
+            )
             
 if __name__ == '__main__':
     '''
