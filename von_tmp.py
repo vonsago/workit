@@ -452,7 +452,12 @@ def ctripPoiCountry():
             'name':i,
             'detail':co}
             )
-            
+
+
+def factory():
+    return getattr(sys.modules[__name__], '')
+
+
 if __name__ == '__main__':
     '''
     csvFile = open("test.csv", "w")
