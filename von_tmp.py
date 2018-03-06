@@ -131,6 +131,13 @@ def get_datas_from_file(fname):
         else:
             return get_data_from_forml(fname)
 
+def get_data_from_db(sql):
+    db=mysql_db_admin.connection()
+    cursor = db.cursor()
+    cursor.execute(sql)
+    db.close()
+    return cursor.fetchall()
+
 def process_datas_to_csv(datas,file_name,header):
     csvFile = open("{}.csv".format(file_name), "w")
     fileheader = header
