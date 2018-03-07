@@ -465,6 +465,9 @@ def ctripPoiCountry():
 def factory():
     return getattr(sys.modules[__name__], '')
 
+def data2csv():
+    pass
+
 
 if __name__ == '__main__':
     '''
