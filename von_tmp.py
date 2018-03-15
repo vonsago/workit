@@ -4,7 +4,7 @@
 '''
 @date : 2017-08-18
 @author : vassago
-@update : 2018-03-13
+@update : 2018-03-15
 @email : f811194414@gmail.com
 '''
 
@@ -456,12 +456,37 @@ def fix(data):
             res += xx[i]+yy[i+1]
         return res
 
+
+def restart_task(data):
+    client = pymongo.MongoClient('')
+    db = client.MongoTask
+    db[data].update_many({'finished':0,'used_times':7}, {
+        '$set': {
+        'finished': 0,
+        'running': 0,
+        'used_times': 0
+        }
+        });
+
 def factory():
     return getattr(sys.modules[__name__], '')
 
 def data2csv():
     pass
 
+def req(url):
+    p = requests.get("").content
+    proxy = {'http': 'socks5://'+p,'https': 'socks5://'+p}
+    datas = requests.get(url,proxies=proxy).content
+    db.data_result.ctripPoi_image_url.insert_one({
+
+        })
+def req_muli(task):
+    gs = []
+    for i in range(task):
+        g = execute_pool.apply_async(req,args=(url,))
+        gs.append(g)
+    gevent.joinall(gs)
 
 if __name__ == '__main__':
     '''
