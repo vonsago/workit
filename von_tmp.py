@@ -123,7 +123,7 @@ def get_datas_from_file(fname, item = False):
             final = []
             datas = f.readlines()
             for data in datas:
-                final.append(data.replace('\n',''))
+                final.append(data.strip())
             return final
     def get_csv_item(fname):
         with open(fname) as f:
@@ -132,6 +132,12 @@ def get_datas_from_file(fname, item = False):
             print _
             for row in f_csv:
                 yield row
+    def get_forml(fname):
+        with open(fname) as f:
+            datas = f.readlines()
+            for data in datas:
+                yield data.strip()
+
     if fname.find('.')>0:
         if fname.split('.')[-1]=='csv':
             if item:
