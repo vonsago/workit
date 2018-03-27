@@ -4,7 +4,7 @@
 '''
 @date : 2017-08-18
 @author : vassago
-@update : 2018-03-19
+@update : 2018-03-27
 @email : f811194414@gmail.com
 '''
 
@@ -108,7 +108,7 @@ def get_PROXY():
         }
     return PROXY
 
-def get_datas_from_file(fname):
+def get_datas_from_file(fname, item = False):
     def get_data_from_csv(fname):
         with open(fname) as f:
             final= []
@@ -125,10 +125,19 @@ def get_datas_from_file(fname):
             for data in datas:
                 final.append(data.replace('\n',''))
             return final
-
+    def get_csv_item(fname):
+        with open(fname) as f:
+            f_csv = csv.reader(f)
+            _ = next(f_csv)
+            print _
+            for row in f_csv:
+                yield row
     if fname.find('.')>0:
         if fname.split('.')[-1]=='csv':
-            return get_data_from_csv(fname)
+            if item:
+                get_csv_item(fname)
+            else:
+                return get_data_from_csv(fname)
         else:
             return get_data_from_forml(fname)
 
