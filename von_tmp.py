@@ -108,7 +108,8 @@ def get_PROXY():
         }
     return PROXY
 
-def get_datas_from_file(fname, item = False):
+def get_datas_from_file(fname, item = False, limit = 100000):
+    csv.field_size_limit(limit)
     def get_data_from_csv(fname):
         with open(fname) as f:
             final= []
