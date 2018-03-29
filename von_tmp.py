@@ -235,27 +235,14 @@ def process(args):
     return result
 
 
-def get_data_from_mongodb(host = None, port = 27017):
+def get_data_from_mongodb(host = None):
+    #from pymong.cursor import CursorType
+    #find(cursor_type=CursorType.EXHAUST)
+    #
     client = pymongo.MongoClient(host)
     collections = client['SuggestName']['CtripCitySuggestion']
-    sql = """INSERT INTO ota_location(
-    source,sid_md5,sid,suggest_type, suggest, city_id, country_id, s_city, s_region, s_country, s_extra,label_batch
-    )
-    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
-    se = set()
-    for data in collections.find():
-        datas = json.loads(data['suggest'])['Data']
-        if datas == None:
-            continue
-        for d in datas:
-            db_data = parse_data_to_db(d)
-            md5 = db_data[1]
-            l = len(se)
-            se.add(md5)
-
-            if l< len(se):
-                insert_db(db_data,sql)
-    print len(se)
+    for data in collections.find({},[],):
+        pass
 
 def parse_data_to_db(d):
 
