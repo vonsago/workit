@@ -21,6 +21,8 @@ import time
 import json
 import requests
 import multiprocessing
+
+execute_pool = pool.Pool(2000)
 '''
 #db
 psw
@@ -205,28 +207,42 @@ def request_suggestion(url, headers = None):
             print e,'get-error'
             i += 1
     return None
+#----google map info
+def retry(times=3, raise_exc=True):
+    def wrapper(func):
+        @functools.wraps(func)
+        def f(*args, **kwargs):
+            _exc = None
+            for i in range(times):
+                try:
+                    return func(*args, **kwargs)
+                except Exception as exc:
+                    _exc = exc
+                    logger.exception(msg="[retry exception][func: {}][count: {}]".format(func.__name__, i),
+                                     exc_info=exc)
+            if _exc and raise_exc:
+                raise _exc
 
-def get_suggestions_elong(url):
-    city_list = get_datas_from_file('booking_city_list.csv')
-    all_ids =[]
+        return f
 
-    def task(city):
-        ul = url.format(city[-2])
-        suggestion = request_suggestion(ul)['data']
-        index = -1
-        print '--process-->',city[-2]
-        if suggestion != None and suggestion.has_key('city'):
-            for sug in suggestion['city']:
-                if all_ids.count(sug['id'])== 0:
-                    all_ids.append(sug['id'])
-                    data = [sug['name_cn'],sug['name_en'],sug["region_info"]['country_name_cn'],sug]
-                    process_data(data)
+    return wrapper
+@retry(times=4, raise_exc=False)
+def google_get_map_info(address):
+    with proj.my_lib.Common.Browser.MySession(need_cache=True) as session:
+        page = session.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + quote(address))
+        results = json.loads(page.text).get(
+            'results', [])
+        if len(results) == 0:
+            raise Exception("length 0")
 
-    gs = []
-    for city in city_list:
-        g = execute_pool.apply_async(task, args=(city,))
-        gs.append(g)
-    gevent.joinall(gs)
+        map_info = results[0].get('geometry', {}).get('location', {})
+
+        try:
+            longitude = float(map_info.get('lng', None))
+            latitude = float(map_info.get('lat', None))
+        except Exception as e:
+            raise e
+        return str(Coordinate(longitude, latitude))
 
 def process(args):
     '''
