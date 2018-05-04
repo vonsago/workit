@@ -279,67 +279,6 @@ def calc_md5(before = None):
     m.update(str(before))
     return m.hexdigest()
 
-def ctripPoi_detail2mysql():
-    sql = """INSERT INTO ctrip_poi_detail(
-    poi_id, source, poi_type, name, name_en, city_id, map_info, address, telephone, introduction, grade, beentocount, plantocount, commentcount, image_url, image_num, 
-    grade_detail, comment_category_detail, highlight, visit_time, website, open_time, ticket, price, tag, city_info, url, traffic, tips
-    )
-    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
-
-    poi_type_dic = {'sight':1,'shop':2,'food':3,'shopping':2}
-    collections = client['data_result']['ctrip_poi_detail']
-    num = 0
-    for coo in collections.find({'collections':'Task_Queue_poi_detail_TaskName_detail_total_ctripPoi_20180211q'}).sort("_id",pymongo.DESCENDING):
-        if coo['result']!=[]:
-            co = coo['result']
-            try:
-                poi_id = coo['poi_id']
-            except:
-                num+=1
-                continue
-            poi_type = poi_type_dic[coo['tag']]
-            url = coo['url']
-            s = co[12].split(',')
-            co[12] = s[1]+','+s[0]
-
-            city_id = ''
-            if citydic.has_key(co[4].encode('utf-8')):
-                city_id = citydic[co[4].encode('utf-8')]
-                print 'city_id',city_id
-            if co[6] == '':
-                co[6] = 0
-            data = [poi_id,'ctripPoi', poi_type, co[0], co[1], city_id,co[12], co[13], co[17], co[11], co[5],0,0, 
-                    int(co[6]), co[7],co[8],json.dumps(co[9]), json.dumps(co[10]),
-                    co[15], co[16], co[18], co[19], co[20], co[21], co[14], co[4] ,url, co[-2].encode('utf-8'), co[-1]]
-            insert_db(data,sql)
-    print num
-
-def ctripPoiCityDetailTask():
-    # ctrip poi city deatil task
-    import pymongo
-    import pymongo.errors
-    client = pymongo.MongoClient('mongodb://root:miaoji1109-=@10.19.2.103:27017/')
-    db = client['SuggestName']
-    all = []
-    for ce in db.CtripPoiSDK.find({}):
-        try:
-            s = ce['suggest']['List']
-        except:
-            continue
-        for sug in ce['suggest']['List']:
-            args = {
-                'name': sug['Name'],
-                'dest_name': sug['DestName'],
-                'keyword': sug['Url'].split('.')[0].split('/')[-1]
-            }
-            all.append(args)
-    print(len(all))
-    with InsertTask(worker='proj.total_tasks.normal_city_task', queue='supplement_field', routine_key='supplement_field',
-                    task_name='Poictrip_city_20180227a', source='ctrippoidetail', _type='CityInfo',
-                    priority=3, task_type=TaskType.NORMAL) as it:
-        for a in all:
-            it.insert_task(a)
-
 def match_ctripPoi_city():
     import pymongo
     import json
