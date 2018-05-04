@@ -279,67 +279,6 @@ def calc_md5(before = None):
     m.update(str(before))
     return m.hexdigest()
 
-def match_ctripPoi_city():
-    import pymongo
-    import json
-
-    client = pymongo.MongoClient('mongodb://root:miaoji1109-=@10.19.2.103:27017/')
-    collections = client['SuggestName']['CtripPoiSDK_detail']
-
-    d = MiojiSimilarCityDict()
-
-    for co in collections.find({}):
-        try:
-            mapdic = json.loads(co['map_info'])
-            map = str(mapdic['lng'])+','+str(mapdic['lat'])
-            city_id = d.get_mioji_city_id((co['dest_name'],co['name']), map)[0].cid
-            client.SuggestName.CtripPoiSDK_Mioji.save({
-                'city_id':city_id,
-                'name':co['name'],
-                'dest_name':co['dest_name'],
-                'task':co['keyword'],
-                'map_info':co['map_info']
-            })
-        except Exception as e:
-            print(e)
-            print(co['name'])
-            pass
-def ctripPoiDetail2mysql():
-    # ctrip poi deatail 2 mysql
-    sql = """INSERT INTO ctrip_poi_test(
-    poi_id, source, poi_type, name, name_en, city_id, map_info, address, telephone, introduction, grade, beentocount, plantocount, commentcount, image_url, image_num, 
-    grade_detail, comment_category_detail, highlight, visit_time, website, open_time, ticket, price, tag, city_info, url, traffic, tips
-    )
-    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
-
-    poi_type_dic = {'sight':1,'shop':2,'food':3,'shopping':2}
-    client = pymongo.MongoClient('mongodb://root:miaoji1109-=@10.19.2.103:27017/')
-    collections = client['data_result']['ctrip_poi_detail']
-    num = 0
-    for coo in collections.find({'collections':'Task_Queue_poi_detail_TaskName_detail_total_ctripPoi_20180227b'}).sort("_id",pymongo.DESCENDING):
-        if coo['result']!=[]:
-            co = coo['result']
-            try:
-                poi_id = coo['poi_id']
-            except Exception as e:
-                print co[0]
-                num+=1
-                continue
-            poi_type = poi_type_dic[coo['tag']]
-            url = coo['url']
-            s = co[12].split(',')
-            co[12] = s[1]+','+s[0]
-
-            city_id = coo['city_id']
-
-            if co[6] == '':
-                co[6] = 0
-            data = [poi_id,'ctripPoi', poi_type, co[0], co[1], city_id,co[12], co[13], co[17], co[11], co[5],co[2],co[3], 
-                    int(co[6]), co[7],co[8],json.dumps(co[9]), json.dumps(co[10]),
-                    co[15], co[16], co[18], co[19], co[20], co[21], co[14], co[4] ,url, co[-2].encode('utf-8'), co[-1]]
-            insert_db(data,sql)
-    print num
-
 
 def report_country():
     countryss = get_data_from_db('SELECT name FROM country')
