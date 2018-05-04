@@ -4,7 +4,7 @@
 '''
 @date : 2017-08-18
 @author : vassago
-@update : 2018-03-27
+@update : 2018-05-04
 @email : f811194414@gmail.com
 '''
 
@@ -248,7 +248,7 @@ def process(args):
     '''
     work
     '''
-    return result
+    pass
 
 
 def get_data_from_mongodb(host = None):
