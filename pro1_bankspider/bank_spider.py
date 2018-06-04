@@ -6,11 +6,9 @@ date : 2017-07-27
 @author: fengyufei
 '''
 import re
-import os
 import sys
 import requests
 import json
-import time
 import MySQLdb
 reload(sys) 
 sys.setdefaultencoding('utf-8')
