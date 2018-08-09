@@ -3,7 +3,6 @@
 import os
 import sys
 import string
-import redis
 import MySQLdb  
 
 reload(sys)
